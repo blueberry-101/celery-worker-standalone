@@ -15,7 +15,7 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Set the working directory
-WORKDIR /app
+
 
 # Define the entrypoint for the Celery worker
 ENTRYPOINT [ "python", "worker.py" ]
