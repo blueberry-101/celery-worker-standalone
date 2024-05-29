@@ -1,21 +1,19 @@
-FROM python:3.11.4-alpine
+FROM python:3.11-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Install build dependencies
-RUN apk add --no-cache build-base
-
-# Install pip dependencies
-RUN pip install --upgrade pip
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-
-# Copy application files
-COPY . .
+# Create a non-root user
+RUN useradd -m celeryuser
 
 # Set the working directory
+WORKDIR /app
 
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Define the entrypoint for the Celery worker
-ENTRYPOINT [ "python", "worker.py" ]
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Change to non-root user
+USER celeryuser
+
+# Command to run the Celery worker
+CMD ["celery", "-A", "tasks", "worker", "--loglevel=info"]
