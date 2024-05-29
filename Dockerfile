@@ -18,4 +18,4 @@ COPY . .
 WORKDIR /app
 
 # Define the entrypoint for the Celery worker
-ENTRYPOINT [ "celery", "-A", "Finksta", "worker", "--loglevel=info" ]
+ENTRYPOINT [ "python", "worker.py" ]
